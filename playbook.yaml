@@ -1,0 +1,10 @@
+- name: Provision new VM
+  hosts: localhost
+  tasks:
+    - name: Create new VM with minimal options
+      community.general.proxmox_kvm:
+        api_user: root@pam
+        api_password: "{{ lookup('env', 'PROXMOX_PASSWORD') }}"
+        api_host: 192.168.0.121
+        name: svr-test-01
+        node: pve
