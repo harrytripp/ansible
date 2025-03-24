@@ -1,0 +1,23 @@
+- name: Provision new VM with specified hardware
+  hosts: localhost
+  tasks:
+    - name: "Creates a VM with:
+              - Network Adaptor rate limited to 200MB/s with a Linux bridge interface
+              - 10GB Thin provisioned virtIO drive
+              - Configured Boot Priority and SCSI Controller
+              - 1 CPU, 2 Cores, 2GB RAM"
+      community.general.proxmox_kvm:
+        api_user: root@pam
+        api_password: "{{ lookup('env', 'PROXMOX_PASSWORD') }}"
+        api_host: 192.168.0.121
+        name: svr-test-01
+        node: pve
+        net:
+          net0: 'virtio,bridge=vmbr1,rate=200'
+        virtio:
+          virtio0: 'local-zfs:10,format=raw'
+        bootdisk: virtio0
+        scsihw: "virtio-scsi-single"
+        memory: 2048
+        cores: 2
+        vcpus: 1
